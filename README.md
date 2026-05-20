@@ -1,110 +1,142 @@
-# My Personal Website
+# Aaron Wu — Personal Site
 
-A simple, hand-built personal site. Edit it in VS Code, push it to GitHub, and host it for free on GitHub Pages.
+Live at **[aaronwuwoo.github.io](https://aaronwuwoo.github.io)**
+
+A hand-built personal website. Editorial aesthetic — cream and terracotta palette, Fraunces serif + Plus Jakarta Sans, lots of subtle motion.
 
 ---
 
-## 📁 What's in here
+## 📁 Files
 
 ```
-my-website/
-├── index.html      ← Page content (edit your name, bio, projects here)
-├── style.css       ← All visual styling (colors, fonts, layout)
-├── script.js       ← Scroll animations and small interactions
+aaronwuwoo.github.io/
+├── index.html      ← All page content
+├── style.css       ← All visual styling (colors, fonts, layout, animations)
+├── script.js       ← All interactions (loader, cursor, clock, scroll, etc.)
+├── favicon.svg     ← Browser tab icon
 └── README.md       ← This file
 ```
 
 ---
 
-## ✏️ Editing in VS Code
+## 🛠️ Editing on GitHub
 
-1. **Open the folder in VS Code**
-   - File → Open Folder → select this folder.
+The whole site lives in plain HTML/CSS/JS — no build step, no framework, no terminal needed.
 
-2. **Find the bits to change**
-   Every spot you should personalize is marked with `<!-- EDIT: ... -->` in `index.html`. Search for `EDIT:` (Cmd/Ctrl + F) to find them all quickly.
+1. Click any file → click the pencil ✏️ → edit → **Commit changes**
+2. Wait ~60 seconds for GitHub Pages to rebuild
+3. Hard-refresh the live site (`Cmd+Shift+R` / `Ctrl+Shift+R`) to bust the browser cache
 
-3. **Preview as you work**
-   - Easiest: right-click `index.html` → **Open With Live Server** (install the "Live Server" extension by Ritwick Dey first — it auto-refreshes the page as you save).
-   - Or just open `index.html` in your browser by double-clicking it.
+### Common edits
 
-4. **Change the colors / fonts**
-   Open `style.css`. The first block (`:root { ... }`) holds every color and font in one place. Swap the hex codes there to retheme the whole site.
+- **Change copy** (name, bio, project description): edit `index.html`
+- **Change colors/fonts/spacing**: edit `style.css` — the first block (`:root { ... }`) holds the entire palette in one place
+- **Change behavior** (clock, scroll, animations): edit `script.js`
 
 ---
 
-## 🚀 Putting it on GitHub (and the live web)
+## ✨ Features
 
-### One-time setup
+**On load:**
+- Page loader spelling out "Aaron Wu" letter-by-letter, then peeling away
+- Animated mesh gradient blobs drifting in the background
+- Subtle film grain breathing on top of everything
 
-1. **Make a GitHub account** at https://github.com if you don't have one.
+**Hero:**
+- Name scrambles in with random characters before settling
+- Morphing SVG blob shape behind the text
+- Parallax — title shrinks and fades as you scroll past
 
-2. **Install Git** (https://git-scm.com/downloads) — VS Code will use it.
+**Navigation:**
+- Live LA time updating every second
+- ⌘K command palette — press `Cmd+K` or `Ctrl+K` anywhere to open
+- Theme toggle (light/dark) that remembers your preference
+- Side dot nav showing current section
+- Keyboard shortcuts: `J` next section, `K` previous section
+- Scroll progress bar at the top
 
-3. **Create a new repository on GitHub**
-   - Click the **+** in the top-right → **New repository**.
-   - Name it `your-username.github.io` (replace `your-username` with your actual GitHub username — this exact name gives you a free site at `https://your-username.github.io`).
-   - Leave it **Public**. Don't add a README (you already have one).
-   - Click **Create repository**.
+**Cursor (desktop only):**
+- Custom dot + ring cursor
+- Magnetic effect on buttons and links
+- "VIEW" label when hovering project cards
+- Soft warm spotlight glow follows your mouse
 
-### Pushing this folder to GitHub
+**Sections:**
+- About with sticky 3D-tilting portrait
+- Animated stat counters that count up when scrolled into view
+- Skills grid
+- Featured project card for NQ Context (mock chart + Pine Script code snippet)
+- Two scrolling marquee bands
+- Contact with magnetic email link and personalized time-of-day greeting
+- Variable letter weight on hover for section titles
+- Background tint shifts per section
 
-In VS Code, open the terminal (`` Ctrl + ` ``) and run these commands one at a time, in this folder:
+**Accessibility:**
+- Respects `prefers-reduced-motion`
+- Respects `prefers-color-scheme` for initial theme
 
-```bash
-git init
-git add .
-git commit -m "First commit"
-git branch -M main
-git remote add origin https://github.com/your-username/your-username.github.io.git
-git push -u origin main
+---
+
+## 🎨 Customizing
+
+### Change the color scheme
+
+In `style.css`, find the `:root` block at the top:
+
+```css
+:root {
+  --bg: #f5f1ea;        ← cream background
+  --ink: #1a1714;       ← dark text
+  --accent: #c04f2c;    ← terracotta accent
+  --sage: #7a8471;      ← muted green
+  /* ... */
+}
 ```
 
-(Replace `your-username` with your actual GitHub username.)
+Swap the hex codes. The dark theme variables sit right below in `[data-theme="dark"]`.
 
-GitHub may ask you to sign in — follow the prompts.
+### Add a real photo
 
-### Turning on GitHub Pages
+In `index.html`, find the `.portrait-wrap` block and replace with:
 
-1. Go to your repo on github.com.
-2. Click **Settings** → **Pages** (left sidebar).
-3. Under **Source**, select **Deploy from a branch**.
-4. Pick branch **main**, folder **/ (root)**, then **Save**.
-5. Wait ~1 minute. Your site is live at **`https://your-username.github.io`** 🎉
+```html
+<div class="portrait-wrap" id="portrait">
+  <img src="me.jpg" alt="Aaron Wu" class="portrait" />
+</div>
+```
 
----
+Then upload `me.jpg` to the repo (Add file → Upload files).
 
-## 🔁 Making changes later
+### Add another project
 
-After the first push, the loop is:
-
-1. Edit files in VS Code.
-2. Save.
-3. In the terminal, run:
-   ```bash
-   git add .
-   git commit -m "Describe what you changed"
-   git push
-   ```
-4. Wait a minute. Live site updates automatically.
-
-VS Code also has a built-in **Source Control** panel (the branch icon in the sidebar) where you can do all of this with buttons instead of typing — totally fine to use that.
+In `index.html`, find the `.projects` block. Copy the entire `<article class="project--featured">` block, paste a second copy right after it, and change the content. Remove the `--featured` class if you want the smaller list style.
 
 ---
 
-## 🎨 Quick customization tips
+## 🚀 Tech notes
 
-- **Change the color scheme:** edit the `:root` variables at the top of `style.css`. Try `--accent: #2c5fc0;` (blue) or `--accent: #6b4e8a;` (purple) for a different mood.
-- **Add a real photo:** replace the `<div class="portrait">…</div>` in `index.html` with `<img src="photo.jpg" class="portrait" alt="Me" />`. Drop the photo file into this folder.
-- **Add a new section:** copy any existing `<section>...</section>` block, change the content, and update the nav link.
-- **Different fonts:** browse https://fonts.google.com, copy the `<link>` tag from there into the `<head>` of `index.html`, then update `--serif` or `--sans` in `style.css`.
+- **Hosting:** GitHub Pages (free, deploys on every commit)
+- **Smooth scroll:** [Lenis](https://lenis.studiofreight.com/) loaded from unpkg CDN
+- **Fonts:** Google Fonts (Fraunces, Plus Jakarta Sans, JetBrains Mono)
+- **No build step:** zero npm, zero bundler, zero framework
+- **No tracking:** no analytics, no cookies
 
 ---
 
-## Stuck?
+## 🐛 Troubleshooting
 
-- **Live site shows old content:** GitHub Pages caches aggressively. Hard-refresh with Cmd/Ctrl + Shift + R, or wait a couple minutes.
-- **Git asks for a password and rejects it:** GitHub no longer accepts your account password from the terminal. You'll need a **personal access token** — see https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens.
-- **Page is broken after editing:** undo recent changes (Cmd/Ctrl + Z) until it works, then re-do them one at a time to find the culprit.
+**Site shows old content after committing**
+GitHub Pages caches aggressively. Hard-refresh with `Cmd+Shift+R`, or open in incognito.
 
-Have fun. Make it weird and yours.
+**Live site is blank or unstyled**
+Check the **Actions** tab in your repo — the most recent build should have a green ✅. If it's red ❌, click in to see the error.
+
+**Cancelled deployments in Actions tab**
+Normal when you commit multiple times in quick succession — GitHub cancels older builds so only the latest deploys. As long as the most recent run is green, you're fine.
+
+**Something looks broken after an edit**
+Click the **History** of the file on GitHub → find the last working commit → click the `...` menu → revert.
+
+---
+
+Built by Aaron Wu, mostly while learning. Constantly tweaking.

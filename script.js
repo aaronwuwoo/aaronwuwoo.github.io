@@ -60,8 +60,21 @@ const heroInner = document.getElementById("heroInner");
 const sections = document.querySelectorAll("section, header.hero");
 const sideLinks = document.querySelectorAll(".side-nav a");
 
+// Performance: track scroll state so we can pause heavy bg animations
+let scrollPauseTimer;
+const markScrolling = () => {
+  document.body.classList.add("is-scrolling");
+  clearTimeout(scrollPauseTimer);
+  scrollPauseTimer = setTimeout(() => {
+    document.body.classList.remove("is-scrolling");
+  }, 180);
+};
+
 const onScroll = (scrollY) => {
   if (scrollY === undefined) scrollY = window.scrollY;
+
+  // Mark as scrolling — pauses mesh + grain animations briefly
+  markScrolling();
 
   // Nav border
   if (scrollY > 20) nav.classList.add("scrolled");

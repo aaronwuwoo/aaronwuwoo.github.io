@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NQ Context — Aaron Wu</title>
+  <meta name="description" content="Custom Pine Script indicator suite for trading NQ futures." />
+
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+
+  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    /* ============================================================
+       Project page — focused, editorial layout
+       ============================================================ */
+    body { overflow-x: hidden; }
+    .grain { z-index: 1; }
+
+    .project-page {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 7rem 1.5rem 4rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .project-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      letter-spacing: 0.04em;
+      color: var(--ink-soft);
+      margin-bottom: 3rem;
+      transition: color 0.2s ease, gap 0.3s ease;
+    }
+    .project-back:hover { color: var(--accent); gap: 0.8rem; }
+    .project-back svg { width: 14px; height: 14px; }
+
+    .project-hero {
+      border-bottom: 1px solid var(--rule);
+      padding-bottom: 3rem;
+      margin-bottom: 3.5rem;
+    }
+
+    .project-hero__meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--ink-soft);
+      margin-bottom: 1.5rem;
+      align-items: center;
+    }
+    .project-hero__meta strong {
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .project-hero__meta-dot {
+      width: 6px; height: 6px;
+      background: var(--sage);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    .project-hero__live {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.2rem 0.55rem;
+      background: var(--accent);
+      color: var(--bg);
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+    }
+
+    .project-hero__title {
+      font-family: var(--serif);
+      font-weight: 300;
+      font-size: clamp(2.5rem, 7vw, 4.5rem);
+      line-height: 1.05;
+      letter-spacing: -0.025em;
+      margin: 0 0 1.5rem;
+      font-variation-settings: "opsz" 144;
+    }
+    .project-hero__title .accent { font-style: italic; }
+
+    .project-hero__lede {
+      font-size: 1.15rem;
+      line-height: 1.65;
+      max-width: 55ch;
+      color: var(--ink-soft);
+      margin: 0;
+    }
+
+    .project-section {
+      margin: 0 0 4rem;
+    }
+    .project-section h2 {
+      font-family: var(--serif);
+      font-weight: 300;
+      font-style: italic;
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      letter-spacing: -0.015em;
+      margin: 0 0 1.25rem;
+      color: var(--accent);
+    }
+    .project-section p {
+      max-width: 62ch;
+      margin: 0 0 1rem;
+      color: var(--ink-soft);
+      line-height: 1.7;
+    }
+
+    .feature-list {
+      list-style: none;
+      padding: 0;
+      margin: 1.5rem 0;
+      max-width: 68ch;
+      border-top: 1px solid var(--rule);
+    }
+    .feature-list li {
+      padding: 1.1rem 0;
+      border-bottom: 1px solid var(--rule);
+      display: grid;
+      grid-template-columns: 1rem 1fr;
+      gap: 1rem;
+      align-items: baseline;
+      color: var(--ink-soft);
+      font-size: 0.97rem;
+      line-height: 1.6;
+    }
+    .feature-list li::before {
+      content: "→";
+      color: var(--accent);
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 1.1rem;
+    }
+    .feature-list strong {
+      color: var(--ink);
+      font-weight: 500;
+      font-family: var(--serif);
+      font-style: italic;
+    }
+
+    /* Mock chart inside detail page — slightly bigger */
+    .project-chart {
+      margin: 0 0 4rem;
+      background: var(--bg-soft);
+      border: 1px solid var(--rule);
+      border-radius: 8px;
+      padding: 1.5rem;
+      position: relative;
+    }
+    .project-chart svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .project-chart__caption {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 0.9rem;
+      color: var(--ink-soft);
+      margin-top: 0.75rem;
+      text-align: center;
+    }
+
+    /* CTA button */
+    .project-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1.1rem 2.25rem;
+      background: var(--accent);
+      color: var(--bg);
+      border-radius: 6px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      font-size: 0.95rem;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      margin-top: 1rem;
+    }
+    .project-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px -10px color-mix(in srgb, var(--accent) 60%, transparent);
+    }
+    .project-cta svg { width: 16px; height: 16px; }
+
+    .project-next {
+      margin-top: 5rem;
+      padding-top: 2.5rem;
+      border-top: 1px solid var(--rule);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 0.95rem;
+      color: var(--ink-soft);
+    }
+    .project-next a {
+      color: var(--accent);
+      transition: opacity 0.2s ease;
+    }
+    .project-next a:hover { opacity: 0.7; }
+
+    @media (max-width: 600px) {
+      .project-page { padding: 6rem 1rem 3rem; }
+      .project-chart { padding: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Background grain (no loader, no mesh) -->
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- Custom cursor -->
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="cursor-ring" id="cursorRing"><span class="cursor-label" id="cursorLabel"></span></div>
+
+  <!-- Simplified nav (no side dots, no clock, no Cmd+K trigger for cleaner page) -->
+  <nav class="nav">
+    <a href="index.html" class="nav__logo" data-cursor="link">AW</a>
+    <ul class="nav__links">
+      <li><a href="index.html#about" data-cursor="link">About</a></li>
+      <li><a href="index.html#work" data-cursor="link">Work</a></li>
+      <li><a href="index.html#contact" data-cursor="link">Contact</a></li>
+    </ul>
+    <div class="nav__right">
+      <button class="theme-toggle" id="themeToggle" data-cursor="link" aria-label="Toggle dark mode">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="12" cy="12" r="4" />
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" stroke-linecap="round" />
+        </svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke-linejoin="round" />
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <main class="project-page">
+    <a href="index.html" class="project-back" data-cursor="link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M19 12H5M12 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Back to home
+    </a>
+
+    <header class="project-hero">
+      <div class="project-hero__meta">
+        <strong>001</strong>
+        <span>·</span>
+        <span class="project-hero__live"><span class="project-hero__meta-dot"></span>LIVE</span>
+        <span>·</span>
+        <span>Pine Script v6 · TradingView</span>
+      </div>
+      <h1 class="project-hero__title">
+        NQ <span class="accent">Context</span>.
+      </h1>
+      <p class="project-hero__lede">
+        A pair of custom indicators I built and trade live every morning on NQ futures.
+        They take all the context I want on screen — gamma levels, value area, day type,
+        volume profile, sweep state — and score the setup so I know when to act.
+      </p>
+    </header>
+
+    <!-- Mock chart -->
+    <div class="project-chart" aria-label="Stylized chart preview">
+      <svg viewBox="0 0 800 320" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+        <g stroke="currentColor" stroke-width="0.5" opacity="0.08">
+          <line x1="0" y1="60"  x2="800" y2="60"/>
+          <line x1="0" y1="120" x2="800" y2="120"/>
+          <line x1="0" y1="180" x2="800" y2="180"/>
+          <line x1="0" y1="240" x2="800" y2="240"/>
+        </g>
+        <rect x="0" y="140" width="800" height="60" fill="#c04f2c" opacity="0.08"/>
+        <line x1="120" y1="100" x2="800" y2="100" stroke="#d97a3a" stroke-width="0.8" stroke-dasharray="2 4" opacity="0.5"/>
+        <line x1="120" y1="220" x2="800" y2="220" stroke="#d97a3a" stroke-width="0.8" stroke-dasharray="2 4" opacity="0.5"/>
+        <line x1="0" y1="165" x2="800" y2="165" stroke="#d4a017" stroke-width="1" stroke-dasharray="1 3" opacity="0.7"/>
+        <line x1="0" y1="50"  x2="800" y2="50"  stroke="#c04f2c" stroke-width="1.5"/>
+        <line x1="0" y1="155" x2="800" y2="155" stroke="#b94196" stroke-width="1.2" stroke-dasharray="6 3"/>
+        <line x1="0" y1="260" x2="800" y2="260" stroke="#5e8a4f" stroke-width="1.5"/>
+        <g class="candles">
+          <line x1="60"  y1="180" x2="60"  y2="220" stroke="#5e8a4f" stroke-width="1"/><rect x="56"  y="190" width="8" height="22" fill="#5e8a4f"/>
+          <line x1="100" y1="170" x2="100" y2="215" stroke="#5e8a4f" stroke-width="1"/><rect x="96"  y="180" width="8" height="20" fill="#5e8a4f"/>
+          <line x1="140" y1="160" x2="140" y2="205" stroke="#5e8a4f" stroke-width="1"/><rect x="136" y="170" width="8" height="25" fill="#5e8a4f"/>
+          <line x1="180" y1="165" x2="180" y2="200" stroke="#c04f2c" stroke-width="1"/><rect x="176" y="175" width="8" height="20" fill="#c04f2c"/>
+          <line x1="220" y1="170" x2="220" y2="210" stroke="#c04f2c" stroke-width="1"/><rect x="216" y="180" width="8" height="25" fill="#c04f2c"/>
+          <line x1="260" y1="155" x2="260" y2="200" stroke="#5e8a4f" stroke-width="1"/><rect x="256" y="165" width="8" height="28" fill="#5e8a4f"/>
+          <line x1="300" y1="140" x2="300" y2="180" stroke="#5e8a4f" stroke-width="1"/><rect x="296" y="150" width="8" height="22" fill="#5e8a4f"/>
+          <line x1="340" y1="125" x2="340" y2="170" stroke="#5e8a4f" stroke-width="1"/><rect x="336" y="135" width="8" height="28" fill="#5e8a4f"/>
+          <line x1="380" y1="115" x2="380" y2="155" stroke="#5e8a4f" stroke-width="1"/><rect x="376" y="125" width="8" height="22" fill="#5e8a4f"/>
+          <line x1="420" y1="120" x2="420" y2="155" stroke="#c04f2c" stroke-width="1"/><rect x="416" y="130" width="8" height="20" fill="#c04f2c"/>
+          <line x1="460" y1="130" x2="460" y2="170" stroke="#c04f2c" stroke-width="1"/><rect x="456" y="140" width="8" height="25" fill="#c04f2c"/>
+          <line x1="500" y1="125" x2="500" y2="170" stroke="#5e8a4f" stroke-width="1"/><rect x="496" y="135" width="8" height="28" fill="#5e8a4f"/>
+          <line x1="540" y1="105" x2="540" y2="150" stroke="#5e8a4f" stroke-width="1"/><rect x="536" y="115" width="8" height="30" fill="#5e8a4f"/>
+          <line x1="580" y1="90"  x2="580" y2="135" stroke="#5e8a4f" stroke-width="1"/><rect x="576" y="100" width="8" height="28" fill="#5e8a4f"/>
+          <line x1="620" y1="95"  x2="620" y2="130" stroke="#c04f2c" stroke-width="1"/><rect x="616" y="105" width="8" height="20" fill="#c04f2c"/>
+          <line x1="660" y1="85"  x2="660" y2="125" stroke="#5e8a4f" stroke-width="1"/><rect x="656" y="95"  width="8" height="22" fill="#5e8a4f"/>
+          <line x1="700" y1="75"  x2="700" y2="115" stroke="#5e8a4f" stroke-width="1"/><rect x="696" y="85"  width="8" height="25" fill="#5e8a4f"/>
+        </g>
+        <g font-family="JetBrains Mono, monospace" font-size="11">
+          <rect x="715" y="42" width="80" height="16" fill="#c04f2c" rx="2"/>
+          <text x="755" y="53" fill="#f5f1ea" text-anchor="middle" font-weight="600">CW 22150</text>
+          <rect x="715" y="147" width="80" height="16" fill="#b94196" rx="2"/>
+          <text x="755" y="158" fill="#f5f1ea" text-anchor="middle" font-weight="600">FLIP 22000</text>
+          <rect x="715" y="252" width="80" height="16" fill="#5e8a4f" rx="2"/>
+          <text x="755" y="263" fill="#f5f1ea" text-anchor="middle" font-weight="600">PW 21800</text>
+        </g>
+        <g>
+          <rect x="14" y="14" width="160" height="22" fill="#2a8ba0" opacity="0.85" rx="3"/>
+          <text x="94" y="29" fill="#f5f1ea" font-family="Plus Jakarta Sans, sans-serif" font-size="10" font-weight="600" letter-spacing="1" text-anchor="middle">BALANCED · IB 1.1× ATR</text>
+        </g>
+        <g>
+          <rect x="610" y="14" width="120" height="22" fill="#1a1714" opacity="0.85" rx="3"/>
+          <circle cx="623" cy="25" r="3" fill="#5cd97c"/>
+          <text x="725" y="29" fill="#f5f1ea" font-family="Plus Jakarta Sans, sans-serif" font-size="10" font-weight="600" letter-spacing="1" text-anchor="end">LONG · SCORE 7/10</text>
+        </g>
+        <polygon points="700,68 695,78 705,78" fill="#5cd97c"/>
+        <text x="700" y="65" fill="#5cd97c" font-family="JetBrains Mono, monospace" font-size="8" font-weight="700" text-anchor="middle">SWP</text>
+      </svg>
+      <p class="project-chart__caption">A live setup on NQ — gamma walls, confluence zone, day-type badge, setup score, and a fired sweep-reclaim trigger.</p>
+    </div>
+
+    <section class="project-section">
+      <h2>Why I built it.</h2>
+      <p>
+        Trading NQ in the cash open is information-dense. There are gamma walls from
+        SpotGamma, value areas from the prior day's profile, round numbers, the
+        initial balance, VWAP, day-type context — and you need all of it on screen
+        in a glance to make good decisions.
+      </p>
+      <p>
+        Off-the-shelf indicators showed me one piece at a time. I wrote NQ Context to
+        stack all the layers, detect when they line up, and tell me which side of the
+        tape has the edge.
+      </p>
+    </section>
+
+    <section class="project-section">
+      <h2>What it does.</h2>
+      <ul class="feature-list">
+        <li><span><strong>Gamma levels.</strong> 0DTE, weekly, and monthly call walls, put walls, and gamma flip lines — each with timeframe-specific styling. Includes a staleness tracker so I know when the data is too old to trust.</span></li>
+        <li><span><strong>Confluence zones.</strong> Auto-detects price areas where prior-day POC/VAH/VAL stack with round 100s/50s and key QQQ-equivalent levels using a live NQ/QQQ ratio.</span></li>
+        <li><span><strong>Session volume profile.</strong> POC/VAH/VAL drawn in real time over the day's range, with a side histogram showing where volume actually transacted.</span></li>
+        <li><span><strong>Day type detection.</strong> Measures the Initial Balance against daily ATR and classifies the day — Trend Day, Balanced, Wide IB Range, Coiling, Double Distribution, etc.</span></li>
+        <li><span><strong>Sweep tracking.</strong> Flags when price wicks through VAH/VAL/PDH/PDL/IBH/IBL, then watches for a reclaim back inside the level.</span></li>
+        <li><span><strong>Six trigger patterns.</strong> Sweep + Reclaim, Rejection Wick at Level, Trend Pullback to VWAP, Failed Breakout, Volume Climax Reversal, and Compression Break.</span></li>
+        <li><span><strong>Setup scoring.</strong> Combines every context layer into a 0–10 confidence score. Triggers only fire when the score crosses a threshold, which keeps me out of forced trades.</span></li>
+        <li><span><strong>CVD divergence.</strong> Companion script tracking cumulative volume delta against price pivots, auto-flagging bull/bear divergences as they form.</span></li>
+      </ul>
+    </section>
+
+    <section class="project-section">
+      <h2>The setup score.</h2>
+      <p>
+        At the heart of the script is the scoring logic — it stacks every layer of
+        context into a single number, so I can judge if a setup is worth taking in
+        a glance.
+      </p>
+
+      <div class="code-block" aria-label="Pine Script code snippet">
+        <div class="code-block__header">
+          <div class="code-block__dots"><span></span><span></span><span></span></div>
+          <span class="code-block__filename">nq_context.pine</span>
+          <span class="code-block__lang">Pine v6</span>
+        </div>
+<pre class="code-block__body"><span class="ln">1</span><span class="com">// Score a long setup by stacking layers of confluence</span>
+<span class="ln">2</span><span class="kw">longScore</span> = <span class="num">0</span>
+<span class="ln">3</span><span class="kw">if</span> inZone
+<span class="ln">4</span>    longScore := longScore + <span class="num">2</span>          <span class="com">// +zone</span>
+<span class="ln">5</span><span class="kw">if</span> aboveFlip <span class="kw">and</span> primaryFlip &gt; <span class="num">0</span>
+<span class="ln">6</span>    longScore := longScore + <span class="num">2</span>          <span class="com">// +flip</span>
+<span class="ln">7</span><span class="kw">if</span> <span class="kw">not na</span>(curVAL) <span class="kw">and</span>
+<span class="ln">8</span>     <span class="fn">math.abs</span>(close - curVAL) &lt;= levelProx
+<span class="ln">9</span>    longScore := longScore + <span class="num">1</span>          <span class="com">// +VAL</span>
+<span class="ln">10</span><span class="kw">if</span> nearestPW &gt; <span class="num">0</span>
+<span class="ln">11</span>    longScore := longScore + <span class="num">1</span>          <span class="com">// +put wall</span>
+<span class="ln">12</span><span class="kw">if</span> close &gt; vwapVal
+<span class="ln">13</span>    longScore := longScore + <span class="num">1</span>          <span class="com">// +VWAP</span>
+<span class="ln">14</span><span class="kw">if</span> longSweep <span class="kw">or</span> longWick <span class="kw">or</span> longPullback
+<span class="ln">15</span>    longScore := longScore + <span class="num">1</span>          <span class="com">// +trigger</span>
+<span class="ln">16</span>
+<span class="ln">17</span><span class="com">// Only fire when conviction is high enough</span>
+<span class="ln">18</span>fireLong = longScore &gt;= minScoreFire
+<span class="ln">19</span><span class="kw">if</span> fireLong
+<span class="ln">20</span>    <span class="fn">alert</span>(<span class="str">"NQ Ctx: LONG · Score "</span> + <span class="fn">str.tostring</span>(longScore))</pre>
+      </div>
+
+      <p style="margin-top: 1.25rem;">
+        A pristine setup — sitting in a confluence zone, on the right side of the
+        gamma flip, near value, with a trigger firing — hits 8/10 and the alert
+        fires. Mediocre setups (3–5/10) stay quiet so I don't take them.
+      </p>
+    </section>
+
+    <section class="project-section">
+      <h2>How I use it.</h2>
+      <p>
+        Every morning before the open I plug in fresh gamma levels from SpotGamma.
+        The script does the rest: draws every level, watches for sweeps, scores
+        setups in real time, and pings my phone when a high-conviction trigger fires.
+      </p>
+      <p>
+        Still iterating. It's the kind of project that will never be "done" — every
+        trade teaches me something to add or refine.
+      </p>
+    </section>
+
+    <a href="https://github.com/aaronwuwoo" target="_blank" rel="noopener" class="project-cta" data-cursor="link">
+      View on GitHub
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M7 17L17 7M17 7H8M17 7v9" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+
+    <div class="project-next">
+      <span>That's the project, for now.</span>
+      <a href="index.html" data-cursor="link">Back home →</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>© 2026 Aaron Wu. Built by hand.</p>
+    <p class="footer__back">
+      <a href="index.html" data-cursor="link">Back to top ↑</a>
+    </p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -312,7 +312,7 @@ if (themeToggle) {
   });
 }
 
-/* ---------- 13. Live LA time ---------- */
+/* ---------- 13. Live LA time (aligned to minute boundaries) ---------- */
 const navTimeText = document.getElementById("navTimeText");
 const updateLATime = () => {
   if (!navTimeText) return;
@@ -320,8 +320,14 @@ const updateLATime = () => {
   const opts = { timeZone: "America/Los_Angeles", hour: "2-digit", minute: "2-digit", hour12: false };
   navTimeText.textContent = now.toLocaleTimeString("en-US", opts);
 };
-updateLATime();
-setInterval(updateLATime, 60000);
+// Recursive setTimeout that re-aligns to the next minute every tick
+const tickLATime = () => {
+  updateLATime();
+  const now = new Date();
+  const msUntilNextMinute = (60 - now.getSeconds()) * 1000 - now.getMilliseconds();
+  setTimeout(tickLATime, msUntilNextMinute);
+};
+tickLATime();
 
 /* ---------- 14. Visitor's local time + greeting ---------- */
 const visitorMsg = document.getElementById("visitorTimeMsg");

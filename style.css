@@ -101,7 +101,7 @@ kbd {
   overflow: hidden;
   pointer-events: none;
   opacity: 0.45;
-  filter: blur(50px);
+  filter: blur(80px);
   /* GPU compositing hints — keep this on its own layer so it doesn't
      force the rest of the page to repaint on every animation frame */
   transform: translateZ(0);
@@ -189,7 +189,7 @@ kbd {
   pointer-events: none;
   z-index: 2;
   transform: translate(-50%, -50%) translateZ(0);
-  filter: blur(25px);
+  filter: blur(40px);
   opacity: 0;
   transition: opacity 0.5s ease;
   will-change: transform, opacity;

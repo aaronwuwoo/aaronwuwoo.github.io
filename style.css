@@ -101,13 +101,20 @@ kbd {
   overflow: hidden;
   pointer-events: none;
   opacity: 0.45;
-  filter: blur(80px);
+  filter: blur(50px);
+  /* GPU compositing hints — keep this on its own layer so it doesn't
+     force the rest of the page to repaint on every animation frame */
+  transform: translateZ(0);
+  will-change: transform;
+  contain: strict;
 }
 [data-theme="dark"] .mesh-bg { opacity: 0.35; }
 .mesh-blob {
   position: absolute;
   border-radius: 50%;
   mix-blend-mode: multiply;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
 }
 [data-theme="dark"] .mesh-blob { mix-blend-mode: screen; }
 .mesh-blob--1 {
@@ -153,6 +160,9 @@ kbd {
   mix-blend-mode: multiply;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.09 0 0 0 0 0.08 0 0 0 0.08 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
   animation: grain-shift 1.2s steps(8) infinite;
+  /* Promote to its own GPU layer */
+  transform: translateZ(0);
+  will-change: transform;
 }
 [data-theme="dark"] .grain { mix-blend-mode: screen; opacity: 0.15; }
 @keyframes grain-shift {
@@ -178,11 +188,12 @@ kbd {
   background: radial-gradient(circle, color-mix(in srgb, var(--accent) 25%, transparent) 0%, transparent 70%);
   pointer-events: none;
   z-index: 2;
-  transform: translate(-50%, -50%);
-  filter: blur(40px);
+  transform: translate(-50%, -50%) translateZ(0);
+  filter: blur(25px);
   opacity: 0;
   transition: opacity 0.5s ease;
   will-change: transform, opacity;
+  contain: strict;
 }
 .spotlight.active { opacity: 1; }
 @media (hover: none), (max-width: 800px) {
@@ -1271,4 +1282,12 @@ a.project {
     transition-duration: 0.01ms !important;
   }
   .marquee__track, .mesh-blob, .grain { animation: none; }
+}
+
+/* Performance: pause expensive background animations during scroll.
+   The eye doesn't notice the slow drift mid-scroll anyway, and pausing
+   lets the browser cache the blurred output → much smoother scrolling. */
+.is-scrolling .mesh-blob,
+.is-scrolling .grain {
+  animation-play-state: paused;
 }

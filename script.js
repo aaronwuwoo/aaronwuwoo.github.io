@@ -312,22 +312,27 @@ if (themeToggle) {
   });
 }
 
-/* ---------- 13. Live LA time (aligned to minute boundaries) ---------- */
+/* ---------- 13. Live LA time (with seconds — ticks every second) ---------- */
 const navTimeText = document.getElementById("navTimeText");
+let lastDisplayedTime = "";
 const updateLATime = () => {
   if (!navTimeText) return;
   const now = new Date();
-  const opts = { timeZone: "America/Los_Angeles", hour: "2-digit", minute: "2-digit", hour12: false };
-  navTimeText.textContent = now.toLocaleTimeString("en-US", opts);
+  const opts = {
+    timeZone: "America/Los_Angeles",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  };
+  const newText = now.toLocaleTimeString("en-US", opts);
+  if (newText !== lastDisplayedTime) {
+    navTimeText.textContent = newText;
+    lastDisplayedTime = newText;
+  }
 };
-// Recursive setTimeout that re-aligns to the next minute every tick
-const tickLATime = () => {
-  updateLATime();
-  const now = new Date();
-  const msUntilNextMinute = (60 - now.getSeconds()) * 1000 - now.getMilliseconds();
-  setTimeout(tickLATime, msUntilNextMinute);
-};
-tickLATime();
+updateLATime();
+setInterval(updateLATime, 1000);
 
 /* ---------- 14. Visitor's local time + greeting ---------- */
 const visitorMsg = document.getElementById("visitorTimeMsg");

@@ -38,20 +38,24 @@ if (typeof Lenis !== "undefined") {
 }
 
 /* ---------- 2. Loader ---------- */
+// Populate the live PST timestamp in the loader
+const loaderTime = document.getElementById("loaderTime");
+if (loaderTime) {
+  const now = new Date();
+  const opts = {
+    timeZone: "America/Los_Angeles",
+    hour: "2-digit", minute: "2-digit", second: "2-digit",
+    hour12: false,
+  };
+  loaderTime.textContent = now.toLocaleTimeString("en-US", opts) + " PST";
+}
+
 // Dismiss loader on a fixed timer — independent of external resources.
-// Using setTimeout from script execution means it fires reliably even if
-// CDN scripts, fonts, or images stall.
 const dismissLoader = () => {
   const loader = document.getElementById("loader");
   if (loader) loader.classList.add("done");
 };
-setTimeout(dismissLoader, 1400);
-// Also dismiss as soon as the DOM is ready, in case it's faster
-if (document.readyState === "complete" || document.readyState === "interactive") {
-  setTimeout(dismissLoader, 1400);
-} else {
-  document.addEventListener("DOMContentLoaded", () => setTimeout(dismissLoader, 1400));
-}
+setTimeout(dismissLoader, 1800);
 
 /* ---------- 3. Scroll bar + nav state + parallax + section tint ---------- */
 const nav = document.querySelector(".nav");

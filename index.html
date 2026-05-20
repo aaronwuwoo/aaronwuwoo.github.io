@@ -3,24 +3,37 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <!-- EDIT: Change to your name and a short description -->
   <title>Aaron Wu — Personal Site</title>
   <meta name="description" content="A short description of who you are and what you do." />
 
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
-    rel="stylesheet"
-  />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <!-- Lenis smooth scroll library -->
+  <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
 
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <!-- ===== ANIMATED MESH GRADIENT BG ===== -->
+  <div class="mesh-bg" aria-hidden="true">
+    <div class="mesh-blob mesh-blob--1"></div>
+    <div class="mesh-blob mesh-blob--2"></div>
+    <div class="mesh-blob mesh-blob--3"></div>
+  </div>
+
+  <!-- ===== ANIMATED GRAIN ===== -->
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- ===== MOUSE SPOTLIGHT ===== -->
+  <div class="spotlight" id="spotlight" aria-hidden="true"></div>
+
   <!-- ===== PAGE LOADER ===== -->
   <div class="loader" id="loader">
     <div class="loader__name" aria-hidden="true">
-      <!-- EDIT: Letters of your name, one <span> per letter, use class="space" for spaces -->
       <span>A</span><span>a</span><span>r</span><span>o</span><span>n</span>
       <span class="space">&nbsp;</span>
       <span>W</span><span>u</span>
@@ -32,47 +45,101 @@
 
   <!-- ===== CUSTOM CURSOR ===== -->
   <div class="cursor-dot" id="cursorDot"></div>
-  <div class="cursor-ring" id="cursorRing"></div>
+  <div class="cursor-ring" id="cursorRing"><span class="cursor-label" id="cursorLabel"></span></div>
+
+  <!-- ===== SIDE DOT NAV ===== -->
+  <nav class="side-nav" aria-label="Section navigation">
+    <ul>
+      <li><a href="#top" data-section="top" class="active" data-cursor="link"><span class="side-dot"></span><span class="side-label">Home</span></a></li>
+      <li><a href="#about" data-section="about" data-cursor="link"><span class="side-dot"></span><span class="side-label">About</span></a></li>
+      <li><a href="#work" data-section="work" data-cursor="link"><span class="side-dot"></span><span class="side-label">Work</span></a></li>
+      <li><a href="#contact" data-section="contact" data-cursor="link"><span class="side-dot"></span><span class="side-label">Contact</span></a></li>
+    </ul>
+  </nav>
+
+  <!-- ===== CMD+K COMMAND BAR ===== -->
+  <div class="cmdk" id="cmdk" aria-hidden="true">
+    <div class="cmdk__backdrop" data-cmdk-close></div>
+    <div class="cmdk__panel" role="dialog" aria-label="Command palette">
+      <div class="cmdk__searchwrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3" stroke-linecap="round"/></svg>
+        <input type="text" id="cmdkInput" class="cmdk__input" placeholder="Type to search… (try 'work', 'email', 'dark')" autocomplete="off" />
+        <kbd class="cmdk__esc">esc</kbd>
+      </div>
+      <ul class="cmdk__results" id="cmdkResults"></ul>
+      <div class="cmdk__footer">
+        <span><kbd>↑↓</kbd> navigate</span>
+        <span><kbd>↵</kbd> select</span>
+        <span><kbd>esc</kbd> close</span>
+      </div>
+    </div>
+  </div>
 
   <!-- ===== NAV ===== -->
   <nav class="nav">
-    <a href="#top" class="nav__logo" data-cursor="link">
-      AW
-    </a>
+    <a href="#top" class="nav__logo" data-cursor="link">AW</a>
     <ul class="nav__links">
       <li><a href="#about" data-cursor="link">About</a></li>
       <li><a href="#work" data-cursor="link">Work</a></li>
       <li><a href="#contact" data-cursor="link">Contact</a></li>
     </ul>
-    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" data-cursor="link">
-      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-        <circle cx="12" cy="12" r="4" />
-        <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
-          stroke-linecap="round" />
-      </svg>
-      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke-linejoin="round" />
-      </svg>
-    </button>
+    <div class="nav__right">
+      <div class="nav__time" id="navTime" aria-label="Current time in Los Angeles">
+        <span class="nav__time-dot"></span>
+        <span id="navTimeText">--:--</span>
+        <span class="nav__time-label">LA</span>
+      </div>
+      <button class="cmdk-trigger" id="cmdkTrigger" data-cursor="link" aria-label="Open command palette">
+        <kbd>⌘K</kbd>
+      </button>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" data-cursor="link">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="12" cy="12" r="4" />
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" stroke-linecap="round" />
+        </svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke-linejoin="round" />
+        </svg>
+      </button>
+    </div>
   </nav>
 
   <!-- ===== HERO ===== -->
   <header class="hero" id="top">
+    <!-- Decorative morphing blob (CSS-only "3D" shape) -->
+    <div class="hero-blob" aria-hidden="true">
+      <svg viewBox="0 0 600 600">
+        <defs>
+          <linearGradient id="blobGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.6" />
+            <stop offset="100%" stop-color="var(--sage)" stop-opacity="0.4" />
+          </linearGradient>
+        </defs>
+        <path fill="url(#blobGrad)" class="blob-path">
+          <animate attributeName="d" dur="20s" repeatCount="indefinite"
+            values="
+              M421.5,322.5Q409,395,343.5,431.5Q278,468,206,442Q134,416,99.5,353Q65,290,98,222Q131,154,201,118.5Q271,83,338,123Q405,163,420,231.5Q435,300,421.5,322.5Z;
+              M448,317Q420,384,361.5,427.5Q303,471,231,453Q159,435,114,378Q69,321,98,250Q127,179,193,132Q259,85,330,108Q401,131,432.5,200Q464,269,448,317Z;
+              M408,310Q391,370,341,415Q291,460,224,447.5Q157,435,113.5,377Q70,319,88,247Q106,175,170.5,140Q235,105,308,114Q381,123,407,196.5Q433,270,408,310Z;
+              M421.5,322.5Q409,395,343.5,431.5Q278,468,206,442Q134,416,99.5,353Q65,290,98,222Q131,154,201,118.5Q271,83,338,123Q405,163,420,231.5Q435,300,421.5,322.5Z
+            " />
+        </path>
+      </svg>
+    </div>
+
     <div class="hero__inner" id="heroInner">
       <p class="hero__eyebrow">
         <span class="dot"></span>
-        <!-- EDIT: Short status or location -->
         Based in Los Angeles · Available for work
       </p>
 
-      <h1 class="hero__title reveal-words">
-        Hi, I'm <span class="accent italic">Aaron Wu</span>.<br />
+      <h1 class="hero__title" id="heroTitle">
+        Hi, I'm <span class="accent italic scramble" data-text="Aaron Wu">Aaron Wu</span>.<br />
         I build <span class="underline">thoughtful</span> things<br />
         on the internet.
       </h1>
 
       <p class="hero__lede">
-        <!-- EDIT: 1–2 sentence intro -->
         A short paragraph about who you are, what you make,
         and what you care about. Keep it warm and specific.
       </p>
@@ -89,7 +156,6 @@
   <!-- ===== MARQUEE BAND ===== -->
   <div class="marquee" aria-hidden="true">
     <div class="marquee__track">
-      <!-- EDIT: Replace with your own words. Repeated twice for seamless loop. -->
       <span>Available for work</span><span class="star">✦</span>
       <span>Designer · Developer · Maker</span><span class="star">✦</span>
       <span>Currently in Los Angeles</span><span class="star">✦</span>
@@ -101,29 +167,25 @@
     </div>
   </div>
 
-  <!-- ===== ABOUT ===== -->
-  <section class="about" id="about">
-    <p class="section__label">01 — About</p>
+  <!-- ===== ABOUT (sticky title demo) ===== -->
+  <section class="about" id="about" data-bg="warm">
+    <div class="about__head">
+      <p class="section__label">01 — About</p>
+    </div>
     <div class="about__grid">
       <div class="about__text">
-        <h2 class="section__title reveal-words">
-          <!-- EDIT: -->
-          A few words about me.
-        </h2>
+        <h2 class="section__title vweight">A few words about me.</h2>
         <p>
-          <!-- EDIT: First paragraph -->
           Write about your background here. Where you grew up,
           what got you started, what you've been building toward.
           Make it feel like a real person wrote it.
         </p>
         <p>
-          <!-- EDIT: Second paragraph -->
           Add a second paragraph about your current focus or
           what excites you lately. Books you love, ideas you're
           chasing, hobbies that shape how you think.
         </p>
         <ul class="about__facts">
-          <!-- EDIT: Your own quick facts -->
           <li><span>Currently</span> Building something new</li>
           <li><span>Loves</span> Coffee, books, long walks</li>
           <li><span>Reading</span> Title of a book</li>
@@ -131,7 +193,6 @@
       </div>
 
       <aside class="about__card">
-        <!-- 3D tilt portrait -->
         <div class="portrait-wrap" id="portrait">
           <div class="portrait">
             <span class="portrait__initials">AW</span>
@@ -143,9 +204,8 @@
     </div>
   </section>
 
-  <!-- ===== STATS / BY THE NUMBERS ===== -->
-  <section class="stats">
-    <!-- EDIT: Replace numbers + labels with your own -->
+  <!-- ===== STATS ===== -->
+  <section class="stats" data-bg="warm">
     <div class="stat">
       <div class="stat__num" data-target="7">0</div>
       <p class="stat__label">Years<br />building</p>
@@ -165,10 +225,9 @@
   </section>
 
   <!-- ===== WHAT I DO ===== -->
-  <section class="skills">
+  <section class="skills" data-bg="sage">
     <p class="section__label">02 — What I Do</p>
     <div class="skills__grid">
-      <!-- EDIT: Replace these 4 cards -->
       <article class="skill">
         <h3>Design</h3>
         <p>Brief description of what you do in this area and the kind of work you take on.</p>
@@ -189,12 +248,11 @@
   </section>
 
   <!-- ===== WORK ===== -->
-  <section class="work" id="work">
+  <section class="work" id="work" data-bg="sage">
     <p class="section__label">03 — Selected Work</p>
-    <h2 class="section__title reveal-words">Things I've made.</h2>
+    <h2 class="section__title vweight">Things I've made.</h2>
 
     <div class="projects">
-      <!-- EDIT: Replace each project -->
       <article class="project" data-cursor="view">
         <div class="project__meta">
           <span class="project__num">001</span>
@@ -236,7 +294,6 @@
     </div>
   </section>
 
-  <!-- ===== SECOND MARQUEE ===== -->
   <div class="marquee marquee--reverse" aria-hidden="true">
     <div class="marquee__track">
       <span>Let's create together</span><span class="star">✦</span>
@@ -249,23 +306,27 @@
   </div>
 
   <!-- ===== CONTACT ===== -->
-  <section class="contact" id="contact">
+  <section class="contact" id="contact" data-bg="rose">
     <p class="section__label">04 — Contact</p>
-    <h2 class="contact__title reveal-words">
+    <h2 class="contact__title vweight">
       Let's <span class="italic accent">talk</span>.
     </h2>
     <p class="contact__lede">
       The best way to reach me is by email. I read everything.
     </p>
-    <a href="mailto:aaronwu442976@gmail.com" class="contact__email magnetic" data-cursor="link">aaronwu442976@gmail.com</a>
+    <a href="mailto:aaronwu442976@gmail.com" class="contact__email magnetic magnetic--strong" data-cursor="link">aaronwu442976@gmail.com</a>
 
     <ul class="contact__socials">
-      <!-- EDIT: Real profile links, delete unused -->
-      <li><a href="https://github.com/yourusername" target="_blank" rel="noopener" data-cursor="link">GitHub</a></li>
+      <li><a href="https://github.com/aaronwuwoo" target="_blank" rel="noopener" data-cursor="link">GitHub</a></li>
       <li><a href="https://twitter.com/yourusername" target="_blank" rel="noopener" data-cursor="link">Twitter</a></li>
       <li><a href="https://linkedin.com/in/yourusername" target="_blank" rel="noopener" data-cursor="link">LinkedIn</a></li>
       <li><a href="https://instagram.com/yourusername" target="_blank" rel="noopener" data-cursor="link">Instagram</a></li>
     </ul>
+
+    <div class="visitor-time" id="visitorTime">
+      <span class="visitor-time__hi">Hi there,</span>
+      <span class="visitor-time__msg" id="visitorTimeMsg">it's a great moment to say hello.</span>
+    </div>
   </section>
 
   <!-- ===== FOOTER ===== -->

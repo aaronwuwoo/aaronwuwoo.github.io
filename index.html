@@ -1,1 +1,284 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- EDIT: Change to your name and a short description -->
+  <title>Your Name — Personal Site</title>
+  <meta name="description" content="A short description of who you are and what you do." />
 
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- ===== PAGE LOADER ===== -->
+  <div class="loader" id="loader">
+    <div class="loader__name" aria-hidden="true">
+      <!-- EDIT: Replace these letters with your name (one <span> per letter, use class="space" for spaces) -->
+      <span>Y</span><span>o</span><span>u</span><span>r</span>
+      <span class="space">&nbsp;</span>
+      <span>N</span><span>a</span><span>m</span><span>e</span>
+    </div>
+  </div>
+
+  <!-- ===== SCROLL PROGRESS BAR ===== -->
+  <div class="progress" id="progress"></div>
+
+  <!-- ===== CUSTOM CURSOR ===== -->
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- ===== NAV ===== -->
+  <nav class="nav">
+    <a href="#top" class="nav__logo" data-cursor="link">
+      <!-- EDIT: Your initials -->
+      YN
+    </a>
+    <ul class="nav__links">
+      <li><a href="#about" data-cursor="link">About</a></li>
+      <li><a href="#work" data-cursor="link">Work</a></li>
+      <li><a href="#contact" data-cursor="link">Contact</a></li>
+    </ul>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" data-cursor="link">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
+          stroke-linecap="round" />
+      </svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke-linejoin="round" />
+      </svg>
+    </button>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <header class="hero" id="top">
+    <div class="hero__inner" id="heroInner">
+      <p class="hero__eyebrow">
+        <span class="dot"></span>
+        <!-- EDIT: Short status or location -->
+        Based in Los Angeles · Available for work
+      </p>
+
+      <h1 class="hero__title reveal-words">
+        <!-- EDIT: Your name and one-liner -->
+        Hi, I'm <span class="accent italic">Your Name</span>.<br />
+        I build <span class="underline">thoughtful</span> things<br />
+        on the internet.
+      </h1>
+
+      <p class="hero__lede">
+        <!-- EDIT: 1–2 sentence intro -->
+        A short paragraph about who you are, what you make,
+        and what you care about. Keep it warm and specific.
+      </p>
+
+      <a href="#about" class="hero__scroll" data-cursor="link" aria-label="Scroll down">
+        <span>Scroll</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M12 5v14M5 12l7 7 7-7" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </a>
+    </div>
+  </header>
+
+  <!-- ===== MARQUEE BAND ===== -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee__track">
+      <!-- EDIT: Replace with your own words. Repeated twice for seamless loop. -->
+      <span>Available for work</span><span class="star">✦</span>
+      <span>Designer · Developer · Maker</span><span class="star">✦</span>
+      <span>Currently in Los Angeles</span><span class="star">✦</span>
+      <span>Let's build something</span><span class="star">✦</span>
+      <span>Available for work</span><span class="star">✦</span>
+      <span>Designer · Developer · Maker</span><span class="star">✦</span>
+      <span>Currently in Los Angeles</span><span class="star">✦</span>
+      <span>Let's build something</span><span class="star">✦</span>
+    </div>
+  </div>
+
+  <!-- ===== ABOUT ===== -->
+  <section class="about" id="about">
+    <p class="section__label">01 — About</p>
+    <div class="about__grid">
+      <div class="about__text">
+        <h2 class="section__title reveal-words">
+          <!-- EDIT: -->
+          A few words about me.
+        </h2>
+        <p>
+          <!-- EDIT: First paragraph -->
+          Write about your background here. Where you grew up,
+          what got you started, what you've been building toward.
+          Make it feel like a real person wrote it.
+        </p>
+        <p>
+          <!-- EDIT: Second paragraph -->
+          Add a second paragraph about your current focus or
+          what excites you lately. Books you love, ideas you're
+          chasing, hobbies that shape how you think.
+        </p>
+        <ul class="about__facts">
+          <!-- EDIT: Your own quick facts -->
+          <li><span>Currently</span> Building something new</li>
+          <li><span>Loves</span> Coffee, books, long walks</li>
+          <li><span>Reading</span> Title of a book</li>
+        </ul>
+      </div>
+
+      <aside class="about__card">
+        <!-- 3D tilt portrait -->
+        <div class="portrait-wrap" id="portrait">
+          <div class="portrait">
+            <span class="portrait__initials">YN</span>
+            <div class="portrait__shine"></div>
+          </div>
+        </div>
+        <p class="about__caption">Probably mid-thought.</p>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ===== STATS / BY THE NUMBERS ===== -->
+  <section class="stats">
+    <!-- EDIT: Replace numbers + labels with your own -->
+    <div class="stat">
+      <div class="stat__num" data-target="7">0</div>
+      <p class="stat__label">Years<br />building</p>
+    </div>
+    <div class="stat">
+      <div class="stat__num" data-target="42">0</div>
+      <p class="stat__label">Projects<br />shipped</p>
+    </div>
+    <div class="stat">
+      <div class="stat__num" data-target="1200" data-suffix="+">0</div>
+      <p class="stat__label">Cups of<br />coffee</p>
+    </div>
+    <div class="stat">
+      <div class="stat__num" data-target="∞" data-static>0</div>
+      <p class="stat__label">Ideas in<br />progress</p>
+    </div>
+  </section>
+
+  <!-- ===== WHAT I DO ===== -->
+  <section class="skills">
+    <p class="section__label">02 — What I Do</p>
+    <div class="skills__grid">
+      <!-- EDIT: Replace these 4 cards -->
+      <article class="skill">
+        <h3>Design</h3>
+        <p>Brief description of what you do in this area and the kind of work you take on.</p>
+      </article>
+      <article class="skill">
+        <h3>Engineering</h3>
+        <p>Brief description — what tools, what you ship, what makes your approach yours.</p>
+      </article>
+      <article class="skill">
+        <h3>Writing</h3>
+        <p>Brief description — what you write about, where it lives, who it's for.</p>
+      </article>
+      <article class="skill">
+        <h3>Something Else</h3>
+        <p>A fourth thing you do that feels honest. Or delete this card if three feels right.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ===== WORK ===== -->
+  <section class="work" id="work">
+    <p class="section__label">03 — Selected Work</p>
+    <h2 class="section__title reveal-words">Things I've made.</h2>
+
+    <div class="projects">
+      <!-- EDIT: Replace each project -->
+      <article class="project" data-cursor="view">
+        <div class="project__meta">
+          <span class="project__num">001</span>
+          <span class="project__year">2025</span>
+        </div>
+        <h3 class="project__title">Project Name One</h3>
+        <p class="project__desc">
+          A sentence or two describing what this is, what your role was, and why it mattered.
+        </p>
+        <div class="project__tags"><span>Tag</span><span>Tag</span><span>Tag</span></div>
+        <a href="#" class="project__link magnetic">View →</a>
+      </article>
+
+      <article class="project" data-cursor="view">
+        <div class="project__meta">
+          <span class="project__num">002</span>
+          <span class="project__year">2025</span>
+        </div>
+        <h3 class="project__title">Project Name Two</h3>
+        <p class="project__desc">
+          Description of the second project. Keep it tight — let the reader want to click through.
+        </p>
+        <div class="project__tags"><span>Tag</span><span>Tag</span></div>
+        <a href="#" class="project__link magnetic">View →</a>
+      </article>
+
+      <article class="project" data-cursor="view">
+        <div class="project__meta">
+          <span class="project__num">003</span>
+          <span class="project__year">2024</span>
+        </div>
+        <h3 class="project__title">Project Name Three</h3>
+        <p class="project__desc">
+          Description of a third project. Add or remove cards as needed.
+        </p>
+        <div class="project__tags"><span>Tag</span><span>Tag</span><span>Tag</span></div>
+        <a href="#" class="project__link magnetic">View →</a>
+      </article>
+    </div>
+  </section>
+
+  <!-- ===== SECOND MARQUEE ===== -->
+  <div class="marquee marquee--reverse" aria-hidden="true">
+    <div class="marquee__track">
+      <span>Let's create together</span><span class="star">✦</span>
+      <span>Say hello below</span><span class="star">✦</span>
+      <span>Thanks for scrolling</span><span class="star">✦</span>
+      <span>Let's create together</span><span class="star">✦</span>
+      <span>Say hello below</span><span class="star">✦</span>
+      <span>Thanks for scrolling</span><span class="star">✦</span>
+    </div>
+  </div>
+
+  <!-- ===== CONTACT ===== -->
+  <section class="contact" id="contact">
+    <p class="section__label">04 — Contact</p>
+    <h2 class="contact__title reveal-words">
+      Let's <span class="italic accent">talk</span>.
+    </h2>
+    <p class="contact__lede">
+      The best way to reach me is by email. I read everything.
+    </p>
+    <!-- EDIT: Real email -->
+    <a href="mailto:you@example.com" class="contact__email magnetic" data-cursor="link">you@example.com</a>
+
+    <ul class="contact__socials">
+      <!-- EDIT: Real profile links, delete unused -->
+      <li><a href="https://github.com/yourusername" target="_blank" rel="noopener" data-cursor="link">GitHub</a></li>
+      <li><a href="https://twitter.com/yourusername" target="_blank" rel="noopener" data-cursor="link">Twitter</a></li>
+      <li><a href="https://linkedin.com/in/yourusername" target="_blank" rel="noopener" data-cursor="link">LinkedIn</a></li>
+      <li><a href="https://instagram.com/yourusername" target="_blank" rel="noopener" data-cursor="link">Instagram</a></li>
+    </ul>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <p>© 2026 Your Name. Built by hand.</p>
+    <p class="footer__back">
+      <a href="#top" data-cursor="link">Back to top ↑</a>
+    </p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

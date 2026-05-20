@@ -370,7 +370,7 @@ const cmdkTrigger = document.getElementById("cmdkTrigger");
 const cmdkItems = [
   { icon: "↑", label: "Go to top",      hint: "home",    action: () => scrollToId("#top") },
   { icon: "①", label: "About",          hint: "section", action: () => scrollToId("#about") },
-  { icon: "②", label: "What I Do",      hint: "section", action: () => scrollToId("#about") },
+  { icon: "②", label: "What I Do",      hint: "section", action: () => scrollToId("#skills") },
   { icon: "③", label: "Selected Work",  hint: "section", action: () => scrollToId("#work") },
   { icon: "④", label: "Contact",        hint: "section", action: () => scrollToId("#contact") },
   { icon: "✉", label: "Email Aaron",    hint: "mailto",  action: () => location.href = "mailto:aaronwu442976@gmail.com" },
@@ -400,7 +400,7 @@ const renderCmdk = () => {
     const li = document.createElement("li");
     li.className = "cmdk-item" + (i === cmdkSelected ? " selected" : "");
     li.innerHTML = `<span class="cmdk-item__icon">${item.icon}</span><span class="cmdk-item__label">${item.label}</span><span class="cmdk-item__hint">${item.hint}</span>`;
-    li.addEventListener("click", () => { item.action(); closeCmdk(); });
+    li.addEventListener("click", () => { closeCmdk(); item.action(); });
     cmdkResults.appendChild(li);
   });
 };
@@ -448,8 +448,9 @@ cmdkInput?.addEventListener("keydown", (e) => {
     renderCmdk();
   } else if (e.key === "Enter") {
     e.preventDefault();
-    cmdkFiltered[cmdkSelected]?.action();
+    const item = cmdkFiltered[cmdkSelected];
     closeCmdk();
+    item?.action();
   } else if (e.key === "Escape") {
     closeCmdk();
   }

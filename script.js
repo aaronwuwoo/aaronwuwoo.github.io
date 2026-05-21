@@ -60,6 +60,8 @@ setTimeout(dismissLoader, 1800);
 /* ---------- 2.5. Candle chart background ---------- */
 // Builds a realistic-looking random-walk candle chart as an SVG, then
 // duplicates it for a seamless horizontal scroll loop.
+// ~4% of candles are "news candles" — fake-out spike-and-reverse moves
+// like you see around CPI/FOMC/NFP. Trader humor.
 const chartBgEl = document.getElementById("chartBg");
 if (chartBgEl) {
   const generateCandles = (count, viewH) => {
@@ -68,45 +70,86 @@ if (chartBgEl) {
     const viewW = count * slot;
     let svg = `<svg viewBox="0 0 ${viewW} ${viewH}" xmlns="http://www.w3.org/2000/svg" fill="none">`;
     let price = viewH * 0.5;
-    let trend = 0;          // -1 down, 0 sideways, 1 up
+    let trend = 0;
     let trendCounter = 0;
+
     for (let i = 0; i < count; i++) {
-      // Occasionally switch trend regime
       if (trendCounter <= 0) {
         const r = Math.random();
         trend = r < 0.4 ? -1 : (r < 0.55 ? 0 : 1);
         trendCounter = Math.floor(Math.random() * 10) + 3;
       }
       trendCounter--;
+
+      const isNews = Math.random() < 0.04;   // ~4% chance per candle
       const open = price;
-      // Direction biased by trend
+
+      // Direction selection
       let direction;
-      if (trend === 0) direction = Math.random() < 0.5 ? 1 : -1;
-      else direction = Math.random() < (trend > 0 ? 0.65 : 0.35) ? 1 : -1;
-      const magnitude = Math.random() * 28 + 4;
-      let close = open + direction * magnitude;
-      // Mean revert if drifting too far from center
-      const center = viewH * 0.5;
-      if (Math.abs(close - center) > viewH * 0.35) {
-        close += (center - close) * 0.4;
+      if (isNews) {
+        direction = Math.random() < 0.5 ? 1 : -1;
+      } else if (trend === 0) {
+        direction = Math.random() < 0.5 ? 1 : -1;
+      } else {
+        direction = Math.random() < (trend > 0 ? 0.65 : 0.35) ? 1 : -1;
       }
-      close = Math.max(20, Math.min(viewH - 20, close));
+
+      // Magnitude — news candles are 3–4x normal
+      const magnitude = isNews
+        ? Math.random() * 80 + 70
+        : Math.random() * 28 + 4;
+
+      let close = open + direction * magnitude;
+
+      // Mean revert non-news candles toward center so chart stays in viewBox
+      if (!isNews) {
+        const center = viewH * 0.5;
+        if (Math.abs(close - center) > viewH * 0.35) {
+          close += (center - close) * 0.4;
+        }
+      }
+      close = Math.max(40, Math.min(viewH - 40, close));
+
       // Wicks
-      const wickHigh = Math.min(open, close) - (Math.random() * 12 + 2);
-      const wickLow = Math.max(open, close) + (Math.random() * 12 + 2);
+      let wickHigh, wickLow;
+      if (isNews) {
+        // Fake-out: long wick on the OPPOSITE side of where the body closed
+        // (price spiked one way then got smacked back)
+        const fakeOut = Math.random() * 55 + 25;
+        if (close < open) {
+          // Bullish body (price went up in SVG y-terms)
+          // Long wick BELOW — looks like price dumped first, then ripped
+          wickHigh = Math.min(open, close) - (Math.random() * 6 + 2);
+          wickLow = Math.max(open, close) + fakeOut;
+        } else {
+          // Bearish body — long wick ABOVE
+          wickHigh = Math.min(open, close) - fakeOut;
+          wickLow = Math.max(open, close) + (Math.random() * 6 + 2);
+        }
+      } else {
+        wickHigh = Math.min(open, close) - (Math.random() * 12 + 2);
+        wickLow = Math.max(open, close) + (Math.random() * 12 + 2);
+      }
+
       // In SVG, smaller y = higher on screen. close < open means price went UP.
       const isUp = close < open;
       const color = isUp ? "#4ade80" : "#ef4444";
+
       const x = i * slot + slot / 2;
       const bodyTop = Math.min(open, close);
       const bodyHeight = Math.max(Math.abs(close - open), 2);
-      svg += `<line x1="${x}" y1="${wickHigh}" x2="${x}" y2="${wickLow}" stroke="${color}" stroke-width="1.5"/>`;
-      svg += `<rect x="${x - bodyW/2}" y="${bodyTop}" width="${bodyW}" height="${bodyHeight}" fill="${color}"/>`;
+      const thisBodyW = isNews ? bodyW + 2 : bodyW;
+      const strokeW = isNews ? 2 : 1.5;
+
+      svg += `<line x1="${x}" y1="${wickHigh}" x2="${x}" y2="${wickLow}" stroke="${color}" stroke-width="${strokeW}"/>`;
+      svg += `<rect x="${x - thisBodyW/2}" y="${bodyTop}" width="${thisBodyW}" height="${bodyHeight}" fill="${color}"/>`;
+
       price = close;
     }
     svg += "</svg>";
     return svg;
   };
+
   const candleSvg = generateCandles(80, 600);
   // Two copies side by side → seamless loop when track scrolls -50%
   chartBgEl.innerHTML = candleSvg + candleSvg;

@@ -542,14 +542,18 @@ kbd {
   position: fixed; top: 0; left: 0; right: 0;
   z-index: 50;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.25rem var(--pad);
+  flex-direction: column;
   background: color-mix(in srgb, var(--bg) 88%, transparent);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border-bottom: 1px solid transparent;
   transition: border-color 0.3s ease, background 0.4s ease;
+}
+.nav__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem var(--pad);
 }
 .nav.scrolled { border-color: var(--rule); }
 .nav__logo {
@@ -643,25 +647,18 @@ kbd {
 .nav__market--pre .nav__market-dot { background: var(--accent); animation: pulse 2s infinite; }
 .nav__market--pre #navMarketStatus { color: var(--accent); font-weight: 600; }
 
-/* ---------- Live ticker bar (below nav) ---------- */
+/* ---------- Live ticker bar (inside nav, below main row) ---------- */
 .ticker-bar {
-  position: fixed;
-  top: 64px;
-  left: 0;
-  right: 0;
-  height: 30px;
   display: flex;
   align-items: center;
   gap: 1.25rem;
+  height: 30px;
   padding: 0 var(--pad);
-  background: color-mix(in srgb, var(--bg-soft) 95%, transparent);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border-bottom: 1px solid var(--rule);
+  background: var(--bg-soft);
+  border-top: 1px solid var(--rule);
   font-family: var(--mono);
   font-size: 11.5px;
   letter-spacing: 0.04em;
-  z-index: 49;
   overflow: hidden;
   white-space: nowrap;
 }

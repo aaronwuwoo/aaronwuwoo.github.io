@@ -875,6 +875,29 @@ section {
   margin-top: 2.5rem;
   border-top: 1px solid var(--rule);
 }
+
+.about__quote {
+  font-family: var(--sans);
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(1.2rem, 2.3vw, 1.5rem);
+  line-height: 1.4;
+  color: var(--accent);
+  margin: 2.5rem 0 0;
+  padding: 0.5rem 0 0.5rem 1.5rem;
+  border-left: 2px solid var(--accent);
+  max-width: 50ch;
+  letter-spacing: -0.01em;
+  position: relative;
+}
+.about__quote::before {
+  content: "\201C";
+  margin-right: 0.05em;
+}
+.about__quote::after {
+  content: "\201D";
+  margin-left: 0.05em;
+}
 .about__facts li {
   display: flex;
   gap: 1.5rem;

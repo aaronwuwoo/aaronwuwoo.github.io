@@ -101,6 +101,11 @@
         <span id="navTimeText">--:--</span>
         <span class="nav__time-label">LA</span>
       </div>
+      <div class="nav__market" id="navMarket" aria-label="NYSE market status">
+        <span class="nav__market-dot" id="navMarketDot"></span>
+        <span id="navMarketStatus">---</span>
+        <span class="nav__market-countdown" id="navMarketCountdown">--:--:--</span>
+      </div>
       <button class="cmdk-trigger" id="cmdkTrigger" data-cursor="link" aria-label="Open command palette">
         <kbd>⌘K</kbd>
       </button>
@@ -115,6 +120,22 @@
       </button>
     </div>
   </nav>
+
+  <!-- ===== LIVE TICKER BAR ===== -->
+  <div class="ticker-bar" id="tickerBar" aria-label="Live ETF ticker">
+    <div class="ticker__item">
+      <span class="ticker__sym">QQQ</span>
+      <span class="ticker__price" id="qqqPrice">---.--</span>
+      <span class="ticker__change" id="qqqChange">+--.-- (+-.--%)</span>
+    </div>
+    <div class="ticker__sep">·</div>
+    <div class="ticker__item">
+      <span class="ticker__sym">SPY</span>
+      <span class="ticker__price" id="spyPrice">---.--</span>
+      <span class="ticker__change" id="spyChange">+--.-- (+-.--%)</span>
+    </div>
+    <div class="ticker__source">[ data via Yahoo Finance ]</div>
+  </div>
 
   <!-- ===== HERO ===== -->
   <header class="hero" id="top">
@@ -365,6 +386,25 @@
       <a href="#top" data-cursor="link">Back to top ↑</a>
     </p>
   </footer>
+
+  <!-- ===== KEYBOARD SHORTCUTS OVERLAY ===== -->
+  <div class="shortcuts" id="shortcuts" aria-hidden="true">
+    <div class="shortcuts__backdrop" data-shortcuts-close></div>
+    <div class="shortcuts__panel" role="dialog" aria-label="Keyboard shortcuts">
+      <div class="shortcuts__header">
+        <span class="shortcuts__brand">[ AW · F1 HELP ]</span>
+        <button class="shortcuts__close" id="shortcutsClose" aria-label="Close" data-shortcuts-close>×</button>
+      </div>
+      <ul class="shortcuts__list">
+        <li><kbd>⌘ K</kbd><span>Open command palette</span></li>
+        <li><kbd>J</kbd><span>Next section</span></li>
+        <li><kbd>K</kbd><span>Previous section</span></li>
+        <li><kbd>?</kbd><span>Show this menu</span></li>
+        <li><kbd>Esc</kbd><span>Close any panel</span></li>
+      </ul>
+      <div class="shortcuts__footer">Press <kbd>?</kbd> again or <kbd>Esc</kbd> to close</div>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>

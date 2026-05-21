@@ -461,20 +461,31 @@ setInterval(updateLATime, 1000);
 
 /* ---------- 14. Visitor's local time + greeting ---------- */
 const visitorMsg = document.getElementById("visitorTimeMsg");
+let lastVisitorKey = "";
 const updateVisitorMsg = () => {
   if (!visitorMsg) return;
   const now = new Date();
   const h = now.getHours();
-  const localTime = now.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+  const m = now.getMinutes();
   let timeOfDay = "afternoon";
   if (h < 5) timeOfDay = "late night";
   else if (h < 12) timeOfDay = "morning";
   else if (h < 17) timeOfDay = "afternoon";
   else if (h < 21) timeOfDay = "evening";
   else timeOfDay = "night";
+
+  // Skip the DOM write if nothing visible has changed (cheap minute check)
+  const key = `${h}:${m}:${timeOfDay}`;
+  if (key === lastVisitorKey) return;
+  lastVisitorKey = key;
+
+  const localTime = now.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
   visitorMsg.textContent = `it's ${localTime} your time — hope your ${timeOfDay} is going well.`;
 };
 updateVisitorMsg();
+// Check every second so the minute flips the instant it changes,
+// but the DOM write only happens when something visible actually changes
+setInterval(updateVisitorMsg, 1000);
 
 /* ---------- 15. Cmd+K command bar ---------- */
 const cmdk = document.getElementById("cmdk");

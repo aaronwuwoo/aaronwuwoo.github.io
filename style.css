@@ -923,6 +923,18 @@ section {
   letter-spacing: -0.03em;
   transform: translateZ(30px);
 }
+.portrait__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+  filter: contrast(1.05) saturate(0.85);
+  transition: filter 0.4s ease;
+}
+.portrait-wrap:hover .portrait__img {
+  filter: contrast(1.1) saturate(1);
+}
 .portrait__shine {
   position: absolute;
   inset: 0;

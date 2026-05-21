@@ -26,7 +26,7 @@
     .project-page {
       max-width: 880px;
       margin: 0 auto;
-      padding: 7rem 1.5rem 4rem;
+      padding: 8.5rem 1.5rem 4rem;
       position: relative;
       z-index: 2;
     }
@@ -243,6 +243,11 @@
         <span id="navTimeText">--:--</span>
         <span class="nav__time-label">LA</span>
       </div>
+      <div class="nav__market" id="navMarket" aria-label="NYSE market status">
+        <span class="nav__market-dot" id="navMarketDot"></span>
+        <span id="navMarketStatus">---</span>
+        <span class="nav__market-countdown" id="navMarketCountdown">--:--:--</span>
+      </div>
       <button class="theme-toggle" id="themeToggle" data-cursor="link" aria-label="Toggle dark mode">
         <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
           <circle cx="12" cy="12" r="4" />
@@ -254,6 +259,22 @@
       </button>
     </div>
   </nav>
+
+  <!-- ===== LIVE TICKER BAR ===== -->
+  <div class="ticker-bar" id="tickerBar" aria-label="Live ETF ticker">
+    <div class="ticker__item">
+      <span class="ticker__sym">QQQ</span>
+      <span class="ticker__price" id="qqqPrice">---.--</span>
+      <span class="ticker__change" id="qqqChange">+--.-- (+-.--%)</span>
+    </div>
+    <div class="ticker__sep">·</div>
+    <div class="ticker__item">
+      <span class="ticker__sym">SPY</span>
+      <span class="ticker__price" id="spyPrice">---.--</span>
+      <span class="ticker__change" id="spyChange">+--.-- (+-.--%)</span>
+    </div>
+    <div class="ticker__source">[ data via Yahoo Finance ]</div>
+  </div>
 
   <main class="project-page">
     <a href="index.html" class="project-back" data-cursor="link">

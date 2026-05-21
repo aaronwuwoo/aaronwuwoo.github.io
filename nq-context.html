@@ -284,7 +284,7 @@
 
     <!-- Mock chart -->
     <div class="project-chart" aria-label="Stylized chart preview">
-      <svg viewBox="0 0 800 320" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+      <svg viewBox="0 0 800 410" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
         <g stroke="currentColor" stroke-width="0.5" opacity="0.08">
           <line x1="0" y1="60"  x2="800" y2="60"/>
           <line x1="0" y1="120" x2="800" y2="120"/>
@@ -335,9 +335,42 @@
           <text x="725" y="29" fill="#f5f1ea" font-family="Plus Jakarta Sans, sans-serif" font-size="10" font-weight="600" letter-spacing="1" text-anchor="end">LONG · SCORE 7/10</text>
         </g>
         <polygon points="700,68 695,78 705,78" fill="#5cd97c"/>
-        <text x="700" y="65" fill="#5cd97c" font-family="JetBrains Mono, monospace" font-size="8" font-weight="700" text-anchor="middle">SWP</text>
+        <text x="700" y="65" fill="#5cd97c" font-family="IBM Plex Mono, monospace" font-size="8" font-weight="700" text-anchor="middle">SWP</text>
+
+        <!-- ===== CVD DIVERGENCE PANE ===== -->
+        <!-- Pane divider + background -->
+        <line x1="0" y1="305" x2="800" y2="305" stroke="#333" stroke-width="0.5"/>
+        <rect x="0" y="310" width="800" height="100" fill="#0a0a0a" opacity="0.5"/>
+        <line x1="0" y1="310" x2="800" y2="310" stroke="#1f1f1f" stroke-width="0.5"/>
+
+        <!-- Zero line -->
+        <line x1="0" y1="360" x2="800" y2="360" stroke="#444" stroke-width="0.5" stroke-dasharray="2 3"/>
+
+        <!-- CVD area fill (green, confirming the bullish move) -->
+        <polygon points="60,400 60,395 100,388 140,380 180,383 220,375 260,365 300,355 340,340 380,328 420,335 460,340 500,332 540,323 580,315 620,320 660,317 700,312 700,400"
+                 fill="#4ade80" opacity="0.12"/>
+
+        <!-- CVD line -->
+        <polyline points="60,395 100,388 140,380 180,383 220,375 260,365 300,355 340,340 380,328 420,335 460,340 500,332 540,323 580,315 620,320 660,317 700,312"
+                  stroke="#4ade80" stroke-width="1.5" fill="none"/>
+
+        <!-- Latest CVD value marker -->
+        <circle cx="700" cy="312" r="3" fill="#4ade80"/>
+
+        <!-- Pane labels -->
+        <g font-family="IBM Plex Mono, monospace">
+          <text x="8" y="328" fill="#888" font-size="10" font-weight="600" letter-spacing="0.08em">CVD</text>
+          <text x="792" y="328" fill="#4ade80" font-size="11" font-weight="600" text-anchor="end">+1,247</text>
+          <text x="792" y="318" fill="#666" font-size="7" text-anchor="end">+2K</text>
+          <text x="792" y="358" fill="#666" font-size="7" text-anchor="end">0</text>
+          <text x="792" y="398" fill="#666" font-size="7" text-anchor="end">-2K</text>
+        </g>
+
+        <!-- "CONFIRMING" badge -->
+        <rect x="350" y="318" width="92" height="14" fill="#4ade80" rx="2"/>
+        <text x="396" y="328" fill="#000" font-family="IBM Plex Mono, monospace" font-size="9" font-weight="700" text-anchor="middle">CVD CONFIRMS</text>
       </svg>
-      <p class="project-chart__caption">A live setup on NQ — gamma walls, confluence zone, day-type badge, setup score, and a fired sweep-reclaim trigger.</p>
+      <p class="project-chart__caption">A live setup on NQ — gamma walls, confluence zone, day-type, setup score, a fired sweep-reclaim trigger, and CVD confirming the bullish move.</p>
     </div>
 
     <section class="project-section">

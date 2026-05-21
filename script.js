@@ -459,6 +459,180 @@ const updateLATime = () => {
 updateLATime();
 setInterval(updateLATime, 1000);
 
+/* ---------- 13b. NYSE market clock ---------- */
+const navMarket = document.getElementById("navMarket");
+const navMarketStatus = document.getElementById("navMarketStatus");
+const navMarketCountdown = document.getElementById("navMarketCountdown");
+
+const fmtHMS = (totalSec) => {
+  if (totalSec < 0) totalSec = 0;
+  const h = Math.floor(totalSec / 3600);
+  const m = Math.floor((totalSec % 3600) / 60);
+  const s = totalSec % 60;
+  return [h, m, s].map(n => String(n).padStart(2, "0")).join(":");
+};
+
+const updateMarketClock = () => {
+  if (!navMarket) return;
+  const now = new Date();
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/New_York",
+    weekday: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  }).formatToParts(now);
+  const get = (t) => parts.find(p => p.type === t)?.value;
+  const weekday = get("weekday");
+  const hour = parseInt(get("hour"), 10) % 24;
+  const minute = parseInt(get("minute"), 10);
+  const second = parseInt(get("second"), 10);
+  const isWeekend = weekday === "Sat" || weekday === "Sun";
+  const totalSec = hour * 3600 + minute * 60 + second;
+  const openSec = 9 * 3600 + 30 * 60;
+  const closeSec = 16 * 3600;
+
+  let cls, status, countdown;
+  if (isWeekend) {
+    cls = "nav__market nav__market--closed";
+    status = "CLOSED";
+    countdown = weekday === "Sat" ? "Mon 9:30" : "Tmrw 9:30";
+  } else if (totalSec < openSec) {
+    cls = "nav__market nav__market--pre";
+    status = "PRE-MKT";
+    countdown = fmtHMS(openSec - totalSec);
+  } else if (totalSec < closeSec) {
+    cls = "nav__market nav__market--open";
+    status = "OPEN";
+    countdown = fmtHMS(closeSec - totalSec);
+  } else {
+    cls = "nav__market nav__market--closed";
+    status = "AFTER";
+    countdown = fmtHMS(24 * 3600 - totalSec + openSec);
+  }
+  navMarket.className = cls;
+  if (navMarketStatus) navMarketStatus.textContent = status;
+  if (navMarketCountdown) navMarketCountdown.textContent = countdown;
+};
+if (navMarket) {
+  updateMarketClock();
+  setInterval(updateMarketClock, 1000);
+}
+
+/* ---------- 13c. Live ticker bar (QQQ + SPY) ---------- */
+// Tries Yahoo Finance via a public CORS proxy. Falls back to seeded
+// prices with subtle flicker if the fetch fails. To swap for a real-time
+// API later (Financial Modeling Prep, IEX Cloud, etc.), replace fetchQuote().
+const tickerBar = document.getElementById("tickerBar");
+if (tickerBar) {
+  const tickerSyms = ["QQQ", "SPY"];
+  const tickerFallback = {
+    QQQ: { prevClose: 510.24, last: 510.24 },
+    SPY: { prevClose: 580.18, last: 580.18 },
+  };
+  const tickerState = {};
+
+  const fetchQuote = async (sym) => {
+    try {
+      const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${sym}`;
+      const proxied = `https://api.allorigins.win/raw?url=${encodeURIComponent(yahooUrl)}`;
+      const res = await fetch(proxied, { cache: "no-cache" });
+      if (!res.ok) throw new Error("fetch failed");
+      const data = await res.json();
+      const m = data?.chart?.result?.[0]?.meta;
+      if (!m || typeof m.regularMarketPrice !== "number") throw new Error("bad data");
+      return { price: m.regularMarketPrice, prevClose: m.chartPreviousClose };
+    } catch (e) {
+      return null;
+    }
+  };
+
+  const renderTicker = () => {
+    for (const sym of tickerSyms) {
+      const s = tickerState[sym];
+      if (!s) continue;
+      const change = s.last - s.prevClose;
+      const pct = (change / s.prevClose) * 100;
+      const isUp = change >= 0;
+      const priceEl = document.getElementById(sym.toLowerCase() + "Price");
+      const changeEl = document.getElementById(sym.toLowerCase() + "Change");
+      if (priceEl) priceEl.textContent = s.last.toFixed(2);
+      if (changeEl) {
+        const sign = isUp ? "+" : "−";
+        const absC = Math.abs(change).toFixed(2);
+        const absP = Math.abs(pct).toFixed(2);
+        changeEl.textContent = `${sign}${absC} (${sign}${absP}%)`;
+        changeEl.className = "ticker__change " + (isUp ? "ticker__change--up" : "ticker__change--down");
+      }
+    }
+  };
+
+  const initTicker = async () => {
+    // Seed with fallbacks for instant render
+    for (const sym of tickerSyms) tickerState[sym] = { ...tickerFallback[sym] };
+    renderTicker();
+    // Then fire real fetches
+    for (const sym of tickerSyms) {
+      const q = await fetchQuote(sym);
+      if (q) tickerState[sym] = { prevClose: q.prevClose, last: q.price };
+    }
+    renderTicker();
+  };
+
+  const flickerTicker = () => {
+    for (const sym of tickerSyms) {
+      const s = tickerState[sym];
+      if (!s) continue;
+      // Small random walk (max ~0.06 per tick)
+      s.last += (Math.random() - 0.5) * 0.12;
+    }
+    renderTicker();
+  };
+
+  const refreshTicker = async () => {
+    for (const sym of tickerSyms) {
+      const q = await fetchQuote(sym);
+      if (q) tickerState[sym] = { prevClose: q.prevClose, last: q.price };
+    }
+    renderTicker();
+  };
+
+  initTicker();
+  setInterval(flickerTicker, 3000);    // visual life every 3s
+  setInterval(refreshTicker, 60000);   // re-pull real prices every 60s
+}
+
+/* ---------- 13d. Keyboard shortcuts overlay (?) ---------- */
+const shortcuts = document.getElementById("shortcuts");
+const openShortcuts = () => {
+  if (!shortcuts) return;
+  shortcuts.classList.add("open");
+  shortcuts.setAttribute("aria-hidden", "false");
+};
+const closeShortcuts = () => {
+  if (!shortcuts) return;
+  shortcuts.classList.remove("open");
+  shortcuts.setAttribute("aria-hidden", "true");
+};
+document.addEventListener("click", (e) => {
+  if (e.target.closest && e.target.closest("[data-shortcuts-close]")) {
+    closeShortcuts();
+  }
+});
+document.addEventListener("keydown", (e) => {
+  if (e.target.matches && e.target.matches("input, textarea, [contenteditable]")) return;
+  const cmdkOpen = document.getElementById("cmdk")?.classList.contains("open");
+  if (cmdkOpen) return;
+  if (e.key === "?" || (e.shiftKey && e.key === "/")) {
+    e.preventDefault();
+    if (shortcuts && shortcuts.classList.contains("open")) closeShortcuts();
+    else openShortcuts();
+  } else if (e.key === "Escape" && shortcuts && shortcuts.classList.contains("open")) {
+    closeShortcuts();
+  }
+});
+
 /* ---------- 14. Visitor's local time + greeting ---------- */
 const visitorMsg = document.getElementById("visitorTimeMsg");
 let lastVisitorKey = "";
@@ -500,6 +674,7 @@ const cmdkItems = [
   { icon: "③", label: "Selected Work",  hint: "section", action: () => scrollToId("#work") },
   { icon: "④", label: "Contact",        hint: "section", action: () => scrollToId("#contact") },
   { icon: "✉", label: "Email Aaron",    hint: "mailto",  action: () => location.href = "mailto:aaronwu442976@gmail.com" },
+  { icon: "?", label: "Show keyboard shortcuts", hint: "help", action: () => openShortcuts() },
   { icon: "🌗", label: "Toggle dark mode", hint: "theme", action: () => themeToggle?.click() },
   { icon: "↻", label: "Reload page",    hint: "system",  action: () => location.reload() },
   { icon: "↗", label: "GitHub profile", hint: "link",    action: () => window.open("https://github.com/aaronwuwoo", "_blank") },

@@ -57,6 +57,61 @@ const dismissLoader = () => {
 };
 setTimeout(dismissLoader, 1800);
 
+/* ---------- 2.5. Candle chart background ---------- */
+// Builds a realistic-looking random-walk candle chart as an SVG, then
+// duplicates it for a seamless horizontal scroll loop.
+const chartBgEl = document.getElementById("chartBg");
+if (chartBgEl) {
+  const generateCandles = (count, viewH) => {
+    const slot = 24;       // px per candle slot (body + gap)
+    const bodyW = 12;      // body width
+    const viewW = count * slot;
+    let svg = `<svg viewBox="0 0 ${viewW} ${viewH}" xmlns="http://www.w3.org/2000/svg" fill="none">`;
+    let price = viewH * 0.5;
+    let trend = 0;          // -1 down, 0 sideways, 1 up
+    let trendCounter = 0;
+    for (let i = 0; i < count; i++) {
+      // Occasionally switch trend regime
+      if (trendCounter <= 0) {
+        const r = Math.random();
+        trend = r < 0.4 ? -1 : (r < 0.55 ? 0 : 1);
+        trendCounter = Math.floor(Math.random() * 10) + 3;
+      }
+      trendCounter--;
+      const open = price;
+      // Direction biased by trend
+      let direction;
+      if (trend === 0) direction = Math.random() < 0.5 ? 1 : -1;
+      else direction = Math.random() < (trend > 0 ? 0.65 : 0.35) ? 1 : -1;
+      const magnitude = Math.random() * 28 + 4;
+      let close = open + direction * magnitude;
+      // Mean revert if drifting too far from center
+      const center = viewH * 0.5;
+      if (Math.abs(close - center) > viewH * 0.35) {
+        close += (center - close) * 0.4;
+      }
+      close = Math.max(20, Math.min(viewH - 20, close));
+      // Wicks
+      const wickHigh = Math.min(open, close) - (Math.random() * 12 + 2);
+      const wickLow = Math.max(open, close) + (Math.random() * 12 + 2);
+      // In SVG, smaller y = higher on screen. close < open means price went UP.
+      const isUp = close < open;
+      const color = isUp ? "#4ade80" : "#ef4444";
+      const x = i * slot + slot / 2;
+      const bodyTop = Math.min(open, close);
+      const bodyHeight = Math.max(Math.abs(close - open), 2);
+      svg += `<line x1="${x}" y1="${wickHigh}" x2="${x}" y2="${wickLow}" stroke="${color}" stroke-width="1.5"/>`;
+      svg += `<rect x="${x - bodyW/2}" y="${bodyTop}" width="${bodyW}" height="${bodyHeight}" fill="${color}"/>`;
+      price = close;
+    }
+    svg += "</svg>";
+    return svg;
+  };
+  const candleSvg = generateCandles(80, 600);
+  // Two copies side by side → seamless loop when track scrolls -50%
+  chartBgEl.innerHTML = candleSvg + candleSvg;
+}
+
 /* ---------- 3. Scroll bar + nav state + parallax + section tint ---------- */
 const nav = document.querySelector(".nav");
 const bar = document.getElementById("progress");

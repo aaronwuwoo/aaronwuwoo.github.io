@@ -89,53 +89,53 @@
 
   <!-- ===== NAV ===== -->
   <nav class="nav">
-    <a href="#top" class="nav__logo" data-cursor="link">AW</a>
-    <ul class="nav__links">
-      <li><a href="#about" data-cursor="link">About</a></li>
-      <li><a href="#work" data-cursor="link">Work</a></li>
-      <li><a href="#contact" data-cursor="link">Contact</a></li>
-    </ul>
-    <div class="nav__right">
-      <div class="nav__time" id="navTime" aria-label="Current time in Los Angeles">
-        <span class="nav__time-dot"></span>
-        <span id="navTimeText">--:--</span>
-        <span class="nav__time-label">LA</span>
+    <div class="nav__row">
+      <a href="#top" class="nav__logo" data-cursor="link">AW</a>
+      <ul class="nav__links">
+        <li><a href="#about" data-cursor="link">About</a></li>
+        <li><a href="#work" data-cursor="link">Work</a></li>
+        <li><a href="#contact" data-cursor="link">Contact</a></li>
+      </ul>
+      <div class="nav__right">
+        <div class="nav__time" id="navTime" aria-label="Current time in Los Angeles">
+          <span class="nav__time-dot"></span>
+          <span id="navTimeText">--:--</span>
+          <span class="nav__time-label">LA</span>
+        </div>
+        <div class="nav__market" id="navMarket" aria-label="NYSE market status">
+          <span class="nav__market-dot" id="navMarketDot"></span>
+          <span id="navMarketStatus">---</span>
+          <span class="nav__market-countdown" id="navMarketCountdown">--:--:--</span>
+        </div>
+        <button class="cmdk-trigger" id="cmdkTrigger" data-cursor="link" aria-label="Open command palette">
+          <kbd>⌘K</kbd>
+        </button>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" data-cursor="link">
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="12" cy="12" r="4" />
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" stroke-linecap="round" />
+          </svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke-linejoin="round" />
+          </svg>
+        </button>
       </div>
-      <div class="nav__market" id="navMarket" aria-label="NYSE market status">
-        <span class="nav__market-dot" id="navMarketDot"></span>
-        <span id="navMarketStatus">---</span>
-        <span class="nav__market-countdown" id="navMarketCountdown">--:--:--</span>
+    </div>
+    <div class="ticker-bar" id="tickerBar" aria-label="Live ETF ticker">
+      <div class="ticker__item">
+        <span class="ticker__sym">QQQ</span>
+        <span class="ticker__price" id="qqqPrice">---.--</span>
+        <span class="ticker__change" id="qqqChange">+--.-- (+-.--%)</span>
       </div>
-      <button class="cmdk-trigger" id="cmdkTrigger" data-cursor="link" aria-label="Open command palette">
-        <kbd>⌘K</kbd>
-      </button>
-      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" data-cursor="link">
-        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-          <circle cx="12" cy="12" r="4" />
-          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" stroke-linecap="round" />
-        </svg>
-        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke-linejoin="round" />
-        </svg>
-      </button>
+      <div class="ticker__sep">·</div>
+      <div class="ticker__item">
+        <span class="ticker__sym">SPY</span>
+        <span class="ticker__price" id="spyPrice">---.--</span>
+        <span class="ticker__change" id="spyChange">+--.-- (+-.--%)</span>
+      </div>
+      <div class="ticker__source">[ data via Yahoo Finance ]</div>
     </div>
   </nav>
-
-  <!-- ===== LIVE TICKER BAR ===== -->
-  <div class="ticker-bar" id="tickerBar" aria-label="Live ETF ticker">
-    <div class="ticker__item">
-      <span class="ticker__sym">QQQ</span>
-      <span class="ticker__price" id="qqqPrice">---.--</span>
-      <span class="ticker__change" id="qqqChange">+--.-- (+-.--%)</span>
-    </div>
-    <div class="ticker__sep">·</div>
-    <div class="ticker__item">
-      <span class="ticker__sym">SPY</span>
-      <span class="ticker__price" id="spyPrice">---.--</span>
-      <span class="ticker__change" id="spyChange">+--.-- (+-.--%)</span>
-    </div>
-    <div class="ticker__source">[ data via Yahoo Finance ]</div>
-  </div>
 
   <!-- ===== HERO ===== -->
   <header class="hero" id="top">

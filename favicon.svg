@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="6" fill="#000000"/>
+  <text x="32" y="36"
+        font-family="IBM Plex Sans, system-ui, sans-serif"
+        font-weight="700"
+        font-size="22"
+        fill="#ff9500"
+        text-anchor="middle"
+        letter-spacing="-0.5">AW</text>
+  <polyline points="8,52 16,48 22,50 30,42 38,46 46,38 56,40"
+            stroke="#4ade80"
+            stroke-width="1.8"
+            fill="none"
+            stroke-linecap="round"
+            stroke-linejoin="round"/>
+</svg>

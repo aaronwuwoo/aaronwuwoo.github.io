@@ -521,31 +521,54 @@ if (navMarket) {
 }
 
 /* ---------- 13c. Live ticker bar (QQQ + SPY) ---------- */
-// Tries Yahoo Finance via a public CORS proxy. Falls back to seeded
-// prices with subtle flicker if the fetch fails. To swap for a real-time
-// API later (Financial Modeling Prep, IEX Cloud, etc.), replace fetchQuote().
+// Tries Yahoo Finance via several public CORS proxies. Falls back to seeded
+// prices (updated periodically, see below) with subtle flicker if everything
+// fails. To swap for a real-time API later (Financial Modeling Prep, IEX
+// Cloud, Polygon, etc.), replace fetchQuote() with your own call.
 const tickerBar = document.getElementById("tickerBar");
 if (tickerBar) {
   const tickerSyms = ["QQQ", "SPY"];
+
+  // Realistic fallback prices — update these every few months as markets move.
+  // (Just so the site never shows wildly stale numbers if every proxy is down.)
   const tickerFallback = {
-    QQQ: { prevClose: 510.24, last: 510.24 },
-    SPY: { prevClose: 580.18, last: 580.18 },
+    QQQ: { prevClose: 705.00, last: 711.00 },
+    SPY: { prevClose: 733.00, last: 740.00 },
   };
   const tickerState = {};
 
-  const fetchQuote = async (sym) => {
-    try {
-      const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${sym}`;
-      const proxied = `https://api.allorigins.win/raw?url=${encodeURIComponent(yahooUrl)}`;
-      const res = await fetch(proxied, { cache: "no-cache" });
-      if (!res.ok) throw new Error("fetch failed");
-      const data = await res.json();
-      const m = data?.chart?.result?.[0]?.meta;
-      if (!m || typeof m.regularMarketPrice !== "number") throw new Error("bad data");
-      return { price: m.regularMarketPrice, prevClose: m.chartPreviousClose };
-    } catch (e) {
-      return null;
+  // Load cached real data from localStorage (last successful fetch)
+  try {
+    const cached = JSON.parse(localStorage.getItem("tickerCache") || "{}");
+    for (const sym of tickerSyms) {
+      if (cached[sym] && typeof cached[sym].last === "number") {
+        tickerState[sym] = { ...cached[sym] };
+      }
     }
+  } catch (e) { /* ignore */ }
+
+  // Multiple CORS proxies — try in order, fall through on failure
+  const proxies = [
+    (url) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+    (url) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+    (url) => `https://api.codetabs.com/v1/proxy/?quest=${encodeURIComponent(url)}`,
+  ];
+
+  const fetchQuote = async (sym) => {
+    const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${sym}`;
+    for (const proxy of proxies) {
+      try {
+        const res = await fetch(proxy(yahooUrl), { cache: "no-cache" });
+        if (!res.ok) continue;
+        const data = await res.json();
+        const m = data?.chart?.result?.[0]?.meta;
+        if (!m || typeof m.regularMarketPrice !== "number") continue;
+        return { price: m.regularMarketPrice, prevClose: m.chartPreviousClose };
+      } catch (e) {
+        // try next proxy
+      }
+    }
+    return null;
   };
 
   const renderTicker = () => {
@@ -568,15 +591,23 @@ if (tickerBar) {
     }
   };
 
+  const cacheTicker = () => {
+    try { localStorage.setItem("tickerCache", JSON.stringify(tickerState)); }
+    catch (e) { /* ignore */ }
+  };
+
   const initTicker = async () => {
-    // Seed with fallbacks for instant render
-    for (const sym of tickerSyms) tickerState[sym] = { ...tickerFallback[sym] };
-    renderTicker();
-    // Then fire real fetches
+    // Seed any symbols that weren't loaded from cache
     for (const sym of tickerSyms) {
-      const q = await fetchQuote(sym);
-      if (q) tickerState[sym] = { prevClose: q.prevClose, last: q.price };
+      if (!tickerState[sym]) tickerState[sym] = { ...tickerFallback[sym] };
     }
+    renderTicker();
+    // Now try real fetches in parallel
+    const results = await Promise.all(tickerSyms.map(fetchQuote));
+    results.forEach((q, i) => {
+      if (q) tickerState[tickerSyms[i]] = { prevClose: q.prevClose, last: q.price };
+    });
+    cacheTicker();
     renderTicker();
   };
 
@@ -584,23 +615,24 @@ if (tickerBar) {
     for (const sym of tickerSyms) {
       const s = tickerState[sym];
       if (!s) continue;
-      // Small random walk (max ~0.06 per tick)
+      // Small random walk (~$0.06 per tick on a $700 stock = realistic noise)
       s.last += (Math.random() - 0.5) * 0.12;
     }
     renderTicker();
   };
 
   const refreshTicker = async () => {
-    for (const sym of tickerSyms) {
-      const q = await fetchQuote(sym);
-      if (q) tickerState[sym] = { prevClose: q.prevClose, last: q.price };
-    }
+    const results = await Promise.all(tickerSyms.map(fetchQuote));
+    results.forEach((q, i) => {
+      if (q) tickerState[tickerSyms[i]] = { prevClose: q.prevClose, last: q.price };
+    });
+    cacheTicker();
     renderTicker();
   };
 
   initTicker();
-  setInterval(flickerTicker, 3000);    // visual life every 3s
-  setInterval(refreshTicker, 60000);   // re-pull real prices every 60s
+  setInterval(flickerTicker, 3000);   // visual life every 3s
+  setInterval(refreshTicker, 60000);  // re-pull real prices every 60s
 }
 
 /* ---------- 13d. Keyboard shortcuts overlay (?) ---------- */

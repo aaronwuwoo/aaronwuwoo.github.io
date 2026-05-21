@@ -277,8 +277,8 @@
       <p class="project-hero__lede">
         A pair of custom indicators I built and trade live every morning on NQ futures —
         on funded prop firm capital. They take all the context I want on screen —
-        gamma levels, value area, day type, volume profile, sweep state — and score
-        the setup so I know when to act.
+        gamma levels, value area, day type, sweeps, CVD divergences — and score the
+        setup so I know when to act.
       </p>
     </header>
 
@@ -398,7 +398,7 @@
         <li><span><strong>Sweep tracking.</strong> Flags when price wicks through VAH/VAL/PDH/PDL/IBH/IBL, then watches for a reclaim back inside the level.</span></li>
         <li><span><strong>Six trigger patterns.</strong> Sweep + Reclaim, Rejection Wick at Level, Trend Pullback to VWAP, Failed Breakout, Volume Climax Reversal, and Compression Break.</span></li>
         <li><span><strong>Setup scoring.</strong> Combines every context layer into a 0–10 confidence score. Triggers only fire when the score crosses a threshold, which keeps me out of forced trades.</span></li>
-        <li><span><strong>CVD divergence.</strong> Companion script tracking cumulative volume delta against price pivots, auto-flagging bull/bear divergences as they form.</span></li>
+        <li><span><strong>CVD divergence.</strong> Companion script tracking cumulative volume delta against price pivots, auto-flagging bull and bear divergences as they form — my early signal for cleanest reversals.</span></li>
       </ul>
     </section>
 
@@ -442,6 +442,26 @@
         A pristine setup — sitting in a confluence zone, on the right side of the
         gamma flip, near value, with a trigger firing — hits 8/10 and the alert
         fires. Mediocre setups (3–5/10) stay quiet so I don't take them.
+      </p>
+    </section>
+
+    <section class="project-section">
+      <h2>Catching reversals with CVD.</h2>
+      <p>
+        The companion script tracks <strong>cumulative volume delta</strong> — the
+        running tally of aggressive buying versus aggressive selling on every bar —
+        and watches for divergences against price pivots. When NQ pushes to a new
+        high but CVD doesn't follow, it means the rally is happening on weakening
+        order flow. The same idea works in reverse: a new price low with CVD holding
+        above its prior low signals exhaustion from sellers.
+      </p>
+      <p>
+        These divergences often precede the cleanest reversals — the moves where the
+        crowd is positioned wrong and getting trapped. I use them as a second filter
+        on top of the NQ Context setup score. A long at a put wall with a bullish
+        CVD divergence is exactly the kind of high-conviction reversal trade I want.
+        A short at a call wall with bearish divergence is the same story in reverse —
+        pure confluence between price, levels, and flow.
       </p>
     </section>
 
